@@ -96,24 +96,126 @@ namespace GerenciadorDePousada_Trab_OOP
             {
                 if(reservas[i].Quarto.Numero == quarto)
                 {
-                    if(reservas[i].DiaInicio <= data && reservas[i].DiaFim >= data)
+                    if(reservas[i].DiaInicio <= data && reservas[i].DiaFim >= data && reservas[i].Status != 'C')
                     {
                         quartoLiberado = false;
                     }
                 }
             }
+
+            if (quartoLiberado)
+            {
+                Console.WriteLine("O quarto de número " + quarto + " está liberado neste dia.");
+            }
+            else
+            {
+                Console.WriteLine("O quarto de número " + quarto + " não está liberado neste dia.");
+            }
         }
-        public void consultaReserva(int data, string cliente, Quarto quarto)
+        public void consultaReserva(int data, string cliente, int quarto)
         {
+            bool nenhumaR = true;
+            int cont = 1;
+            for(int i = 0; i < reservas.Count; i++)
+            {
+                if (reservas[i].DiaInicio <= data && reservas[i].DiaFim >= data && 
+                    reservas[i].Quarto.Numero == quarto && reservas[i].Cliente == cliente
+                    && (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
+                {
+                    Console.WriteLine(cont + " - Reserva:");
+                    Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
+                    Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                    Console.WriteLine("Nome do cliente: " + reservas[i].Cliente);
+                    Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
+                    Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
+                    Console.WriteLine("Diária do quarto: R$ " + reservas[i].Quarto.Diaria);
+                    nenhumaR = false;
+                }
+            }
+
+            if(nenhumaR)
+            {
+                Console.WriteLine("Nenhuma reserva ativa existe para os dados informados.");
+            }
+        }
+        public void realizaReserva(int dataInicial, int dataFinal, string cliente, int quarto) 
+        {
+            bool reservaLiberada = true;
+
+            for (int i = 0; i < reservas.Count; i++)
+            {
+                if (reservas[i].Quarto.Numero == quarto)
+                {
+                    if (((reservas[i].DiaInicio <= dataInicial && reservas[i].DiaFim >= dataInicial) ||
+                        (reservas[i].DiaInicio <= dataFinal && reservas[i].DiaFim >= dataFinal)) &&
+                        (reservas[i].Status != 'C' || reservas[i].Status != 'O'))
+                    {
+                        reservaLiberada = false;
+                    }
+                }
+                if (reservas[i].Cliente == cliente && (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
+                {
+                    reservaLiberada = false;
+                }
+            }
+
+            if (reservaLiberada)
+            {
+                Console.WriteLine("Reserva realizada com sucesso.");
+            }
+            else
+            {
+                Console.WriteLine("Falha ao realizar reserva.");
+            }
 
         }
-        public void realizaReserva(int datas, string cliente, Quarto quarto) 
-        { }
         public void cancelaReserva(string cliente)
-        { }
+        {
+            bool reservaExistente = false;
+            for (int i = 0; i < reservas.Count; i++)
+            {
+                if (reservas[i].Cliente == cliente)
+                {
+                    Console.WriteLine("Reserva cancelada com sucesso.");
+                    reservas[i].Status = 'C';
+                    reservaExistente = true;
+                }
+            }
+
+            if(!reservaExistente)
+            {
+                Console.WriteLine("Não há nenhuma reserva ativa para este cliente.");
+            }
+        }
         public void realizaCheckIn(string cliente)
-        { }
+        {
+            bool reservaExistente = false;
+            int dias = 0;
+            for (int i = 0; i < reservas.Count; i++)
+            {
+                if (reservas[i].Cliente == cliente)
+                {
+                    Console.WriteLine("Check-in realizado com sucesso.");
+                    reservas[i].Status = 'I';
+                    Console.WriteLine("Reserva:");
+                    Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
+                    Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                    Console.WriteLine("Quantidade de dias reservados: " + dias);
+                    Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
+                    Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
+                    Console.WriteLine("Valor total das diárias: R$ " + (dias * reservas[i].Quarto.Diaria));
+                    reservaExistente = true;
+                }
+            }
+
+            if (!reservaExistente)
+            {
+                Console.WriteLine("Não há nenhuma reserva existente para este cliente.");
+            }
+        }
         public void realizaCheckOut(string cliente) 
-        { }
+        {
+            
+        }
     }
 }

@@ -17,6 +17,18 @@ namespace GerenciadorDePousada_Trab_OOP
         {
             get { return numero ; }
         }
+        public char Categoria
+        {
+            get { return categoria; }
+        }
+        public float Diaria
+        {
+            get { return diaria; }
+        }
+        public List<int> Consumo
+        {
+            get { return consumo; }
+        }
 
         public Quarto()
         {
@@ -51,6 +63,23 @@ namespace GerenciadorDePousada_Trab_OOP
             StringBuilder sb = new StringBuilder(this.numero);
             sb.Append(";");
             return sb.ToString();
+        }
+
+        public void adicionaConsumo(int consumo)
+        {
+
+        }
+        public void listaConsumo()
+        { 
+        }
+        public float valorTotalConsumo()
+        {
+            float valor = 0.0f;
+            return valor;
+        }
+        public void limpaConsumo()
+        {
+
         }
     }
 }

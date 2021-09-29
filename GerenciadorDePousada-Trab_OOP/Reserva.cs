@@ -22,9 +22,21 @@ namespace GerenciadorDePousada_Trab_OOP
         {
             get { return DiaFim; }
         }
+        public string Cliente
+        {
+            get { return cliente; }
+        }
         public Quarto Quarto
         {
             get { return quarto; }
+        }
+        public char Status
+        {
+            get { return status; }
+            set { if (value == 'A' || value == 'C' ||
+                      value == 'I' || value == 'O')
+                  { status = value; } 
+            }
         }
 
         public Reserva()
