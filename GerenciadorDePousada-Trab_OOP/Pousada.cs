@@ -84,7 +84,10 @@ namespace GerenciadorDePousada_Trab_OOP
             sw = new StreamWriter("quarto.txt");
             for (int i = 0; i < quartos.Count; i++)
             {
-                sw.WriteLine(reservas[i].serializar());
+                if(reservas[i].Status != 'C' && reservas[i].Status != 'O')
+                {
+                    sw.WriteLine(reservas[i].serializar());
+                }
             }
             sw = new StreamWriter("produto.txt");
             for (int i = 0; i < quartos.Count; i++)
@@ -94,15 +97,15 @@ namespace GerenciadorDePousada_Trab_OOP
             sw.Close();
         }
 
-        public void consultaDisponibilidade(data data, int quarto)
+        public void consultaDisponibilidade(Data data, int quarto)
         {
             bool quartoLiberado = true;
             DateTime dataP = new DateTime(data.Ano, data.Mes, data.Dia);
 
             for (int i = 0; i < reservas.Count; i++)
             {
-                data di = reservas[i].DiaInicio;
-                data df = reservas[i].DiaFim;
+                Data di = reservas[i].DiaInicio;
+                Data df = reservas[i].DiaFim;
                 DateTime dataI = new DateTime(di.Ano, di.Mes, di.Dia);
                 DateTime dataF = new DateTime(df.Ano, df.Mes, df.Dia);
                 if (reservas[i].Quarto.Numero == quarto)
@@ -124,15 +127,15 @@ namespace GerenciadorDePousada_Trab_OOP
                 Console.WriteLine("O quarto de número " + quarto + " não está liberado neste dia.");
             }
         }
-        public void consultaReserva(data data, string cliente, int quarto)
+        public void consultaReserva(Data data, string cliente, int quarto)
         {
             bool nenhumaR = true;
             DateTime dataP = new DateTime(data.Ano, data.Mes, data.Dia);
             int cont = 1;
             for(int i = 0; i < reservas.Count; i++)
             {
-                data di = reservas[i].DiaInicio;
-                data df = reservas[i].DiaFim;
+                Data di = reservas[i].DiaInicio;
+                Data df = reservas[i].DiaFim;
                 DateTime dataI = new DateTime(di.Ano, di.Mes, di.Dia);
                 DateTime dataF = new DateTime(df.Ano, df.Mes, df.Dia);
                 if (DateTime.Compare(dataI, dataP) <= 0 && DateTime.Compare(dataP, dataF) <= 0 && 
@@ -155,7 +158,7 @@ namespace GerenciadorDePousada_Trab_OOP
                 Console.WriteLine("Nenhuma reserva ativa existe para os dados informados.");
             }
         }
-        public void realizaReserva(data dataInicial, data dataFinal, string cliente, int quarto) 
+        public void realizaReserva(Data dataInicial, Data dataFinal, string cliente, int quarto) 
         {
             bool reservaLiberada = true;
             DateTime dataPI = new DateTime(dataInicial.Ano, dataInicial.Mes, dataInicial.Dia);
@@ -165,8 +168,8 @@ namespace GerenciadorDePousada_Trab_OOP
             {
                 if (reservas[i].Quarto.Numero == quarto)
                 {
-                    data di = reservas[i].DiaInicio;
-                    data df = reservas[i].DiaFim;
+                    Data di = reservas[i].DiaInicio;
+                    Data df = reservas[i].DiaFim;
                     DateTime dataI = new DateTime(di.Ano, di.Mes, di.Dia);
                     DateTime dataF = new DateTime(df.Ano, df.Mes, df.Dia);
                     if (((DateTime.Compare(dataI, dataPI) <= 0 && DateTime.Compare(dataPI, dataF) <= 0) ||

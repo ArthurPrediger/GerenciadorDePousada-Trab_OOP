@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GerenciadorDePousada_Trab_OOP
 {
-    struct data
+    class Data
     {
         private int dia;
         private int mes;
@@ -41,20 +41,27 @@ namespace GerenciadorDePousada_Trab_OOP
                 ano = value;
             }
         }
+
+        public Data(int dia, int mes, int ano)
+        {
+            this.dia = dia;
+            this.mes = mes;
+            this.ano = ano;
+        }
     }
     class Reserva
     {
-        private data diaInicio;
-        private data diaFim;
+        private Data diaInicio;
+        private Data diaFim;
         private string cliente;
         private Quarto quarto;
         private char status;
 
-        public data DiaInicio
+        public Data DiaInicio
         {
             get { return diaInicio; }
         }
-        public data DiaFim
+        public Data DiaFim
         {
             get { return DiaFim; }
         }
@@ -99,7 +106,7 @@ namespace GerenciadorDePousada_Trab_OOP
             }
             status = char.Parse(array[8]);
         }
-        public Reserva(data diaInicio, data diaFim, string cliente, Quarto quarto, char status)
+        public Reserva(Data diaInicio, Data diaFim, string cliente, Quarto quarto, char status)
         {
             this.diaInicio = diaInicio;
             this.diaFim = diaFim;
