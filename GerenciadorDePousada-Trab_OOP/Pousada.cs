@@ -19,6 +19,10 @@ namespace GerenciadorDePousada_Trab_OOP
         {
             get { return quartos; }
         }
+        public List<Produto> Produtos
+        {
+            get { return produtos; }
+        }
 
         public Pousada()
         {
@@ -36,36 +40,36 @@ namespace GerenciadorDePousada_Trab_OOP
             StreamReader sr = new StreamReader("pousada.txt");
             nome = sr.ReadLine();
             contato = sr.ReadLine();
-            sr.Close();
 
-            StreamReader sr1 = new StreamReader("produto.txt");
-            string linha = sr1.ReadLine();
+            sr = new StreamReader("produto.txt");
+            string linha = sr.ReadLine();
             int indice = 0;
-            while (!sr1.EndOfStream)
+            while (!sr.EndOfStream)
             {
                 produtos[indice] = new Produto(linha);
-                linha = sr1.ReadLine();
+                linha = sr.ReadLine();
                 indice++;
             }
 
-            StreamReader sr2 = new StreamReader("quarto.txt");
-            linha = sr2.ReadLine();
-            while(!sr2.EndOfStream)
+            sr = new StreamReader("quarto.txt");
+            linha = sr.ReadLine();
+            while(!sr.EndOfStream)
             {
                 quartos[indice] = new Quarto(linha);
-                linha = sr2.ReadLine();
+                linha = sr.ReadLine();
                 indice++;
             }
 
-            StreamReader sr3 = new StreamReader("reserva.txt");
-            linha = sr3.ReadLine();
+            sr = new StreamReader("reserva.txt");
+            linha = sr.ReadLine();
             indice = 0;
-            while (!sr3.EndOfStream)
+            while (!sr.EndOfStream)
             {
                 reservas[indice] = new Reserva(linha, this);
-                linha = sr3.ReadLine();
+                linha = sr.ReadLine();
                 indice++;
             }
+            sr.Close();
         }
 
         public void salvaDados()
@@ -77,10 +81,12 @@ namespace GerenciadorDePousada_Trab_OOP
             {
                 sw.WriteLine(quartos[i].serializar());
             }
+            sw = new StreamWriter("quarto.txt");
             for (int i = 0; i < quartos.Count; i++)
             {
                 sw.WriteLine(reservas[i].serializar());
             }
+            sw = new StreamWriter("produto.txt");
             for (int i = 0; i < quartos.Count; i++)
             {
                 sw.WriteLine(produtos[i].serializar());
@@ -88,15 +94,21 @@ namespace GerenciadorDePousada_Trab_OOP
             sw.Close();
         }
 
-        public void consultaDisponibilidade(int data, int quarto)
+        public void consultaDisponibilidade(data data, int quarto)
         {
             bool quartoLiberado = true;
+            DateTime dataP = new DateTime(data.Ano, data.Mes, data.Dia);
 
-            for(int i = 0; i < reservas.Count; i++)
+            for (int i = 0; i < reservas.Count; i++)
             {
-                if(reservas[i].Quarto.Numero == quarto)
+                data di = reservas[i].DiaInicio;
+                data df = reservas[i].DiaFim;
+                DateTime dataI = new DateTime(di.Ano, di.Mes, di.Dia);
+                DateTime dataF = new DateTime(df.Ano, df.Mes, df.Dia);
+                if (reservas[i].Quarto.Numero == quarto)
                 {
-                    if(reservas[i].DiaInicio <= data && reservas[i].DiaFim >= data && reservas[i].Status != 'C')
+                    if(DateTime.Compare(dataI, dataP) <= 0 && DateTime.Compare(dataP, dataF) <= 0 && 
+                        reservas[i].Status != 'C' && reservas[i].Status != 'O')
                     {
                         quartoLiberado = false;
                     }
@@ -112,13 +124,18 @@ namespace GerenciadorDePousada_Trab_OOP
                 Console.WriteLine("O quarto de número " + quarto + " não está liberado neste dia.");
             }
         }
-        public void consultaReserva(int data, string cliente, int quarto)
+        public void consultaReserva(data data, string cliente, int quarto)
         {
             bool nenhumaR = true;
+            DateTime dataP = new DateTime(data.Ano, data.Mes, data.Dia);
             int cont = 1;
             for(int i = 0; i < reservas.Count; i++)
             {
-                if (reservas[i].DiaInicio <= data && reservas[i].DiaFim >= data && 
+                data di = reservas[i].DiaInicio;
+                data df = reservas[i].DiaFim;
+                DateTime dataI = new DateTime(di.Ano, di.Mes, di.Dia);
+                DateTime dataF = new DateTime(df.Ano, df.Mes, df.Dia);
+                if (DateTime.Compare(dataI, dataP) <= 0 && DateTime.Compare(dataP, dataF) <= 0 && 
                     reservas[i].Quarto.Numero == quarto && reservas[i].Cliente == cliente
                     && (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
                 {
@@ -138,16 +155,22 @@ namespace GerenciadorDePousada_Trab_OOP
                 Console.WriteLine("Nenhuma reserva ativa existe para os dados informados.");
             }
         }
-        public void realizaReserva(int dataInicial, int dataFinal, string cliente, int quarto) 
+        public void realizaReserva(data dataInicial, data dataFinal, string cliente, int quarto) 
         {
             bool reservaLiberada = true;
+            DateTime dataPI = new DateTime(dataInicial.Ano, dataInicial.Mes, dataInicial.Dia);
+            DateTime dataPF = new DateTime(dataFinal.Ano, dataFinal.Mes, dataFinal.Dia);
 
             for (int i = 0; i < reservas.Count; i++)
             {
                 if (reservas[i].Quarto.Numero == quarto)
                 {
-                    if (((reservas[i].DiaInicio <= dataInicial && reservas[i].DiaFim >= dataInicial) ||
-                        (reservas[i].DiaInicio <= dataFinal && reservas[i].DiaFim >= dataFinal)) &&
+                    data di = reservas[i].DiaInicio;
+                    data df = reservas[i].DiaFim;
+                    DateTime dataI = new DateTime(di.Ano, di.Mes, di.Dia);
+                    DateTime dataF = new DateTime(df.Ano, df.Mes, df.Dia);
+                    if (((DateTime.Compare(dataI, dataPI) <= 0 && DateTime.Compare(dataPI, dataF) <= 0) ||
+                        (DateTime.Compare(dataI, dataPF) <= 0 && DateTime.Compare(dataPF, dataF) <= 0)) &&
                         (reservas[i].Status != 'C' || reservas[i].Status != 'O'))
                     {
                         reservaLiberada = false;
@@ -190,11 +213,16 @@ namespace GerenciadorDePousada_Trab_OOP
         public void realizaCheckIn(string cliente)
         {
             bool reservaExistente = false;
-            int dias = 0;
             for (int i = 0; i < reservas.Count; i++)
             {
-                if (reservas[i].Cliente == cliente)
+                if (reservas[i].Cliente == cliente && reservas[i].Status != 'C' &&
+                    reservas[i].Status != 'O')
                 {
+                    DateTime di = new DateTime(reservas[i].DiaInicio.Ano, reservas[i].DiaInicio.Mes,
+                                                reservas[i].DiaInicio.Dia);
+                    DateTime df = new DateTime(reservas[i].DiaFim.Ano, reservas[i].DiaFim.Mes,
+                                                reservas[i].DiaFim.Dia);
+                    string dias = df.Subtract(di).ToString();
                     Console.WriteLine("Check-in realizado com sucesso.");
                     reservas[i].Status = 'I';
                     Console.WriteLine("Reserva:");
@@ -203,7 +231,7 @@ namespace GerenciadorDePousada_Trab_OOP
                     Console.WriteLine("Quantidade de dias reservados: " + dias);
                     Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
                     Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
-                    Console.WriteLine("Valor total das diárias: R$ " + (dias * reservas[i].Quarto.Diaria));
+                    Console.WriteLine("Valor total das diárias: R$ " + (float.Parse(dias) * reservas[i].Quarto.Diaria));
                     reservaExistente = true;
                 }
             }
@@ -215,7 +243,35 @@ namespace GerenciadorDePousada_Trab_OOP
         }
         public void realizaCheckOut(string cliente) 
         {
-            
+            bool reservaExistente = false;
+            for (int i = 0; i < reservas.Count; i++)
+            {
+                if (reservas[i].Cliente == cliente && reservas[i].Status == 'A' &&
+                    reservas[i].Status == 'I')
+                {
+                    DateTime di = new DateTime(reservas[i].DiaInicio.Ano, reservas[i].DiaInicio.Mes,
+                            reservas[i].DiaInicio.Dia);
+                    DateTime df = new DateTime(reservas[i].DiaFim.Ano, reservas[i].DiaFim.Mes,
+                                                reservas[i].DiaFim.Dia);
+                    string dias = df.Subtract(di).ToString();
+                    float vt = float.Parse(dias) * reservas[i].Quarto.Diaria + reservas[i].Quarto.valorTotalConsumo(this);
+                    Console.WriteLine("Check-out realizado com sucesso.");
+                    Console.WriteLine("Reserva:");
+                    Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
+                    Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                    Console.WriteLine("Valor total das diárias: R$ " + (float.Parse(dias) * reservas[i].Quarto.Diaria));
+                    Console.WriteLine("Valor total dos consumos: R$ " + reservas[i].Quarto.valorTotalConsumo(this));
+                    Console.WriteLine("Valor final a ser pago: R$ " + vt);
+                    reservas[i].Status = 'O';
+                    reservas[i].Quarto.limpaConsumo();
+                    reservaExistente = true;
+                }
+            }
+
+            if (!reservaExistente)
+            {
+                Console.WriteLine("Não há nenhuma reserva com check-in ativo existente para este cliente.");
+            }
         }
     }
 }

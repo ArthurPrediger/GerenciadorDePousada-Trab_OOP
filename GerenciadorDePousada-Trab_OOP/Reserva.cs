@@ -6,19 +6,55 @@ using System.Threading.Tasks;
 
 namespace GerenciadorDePousada_Trab_OOP
 {
+    struct data
+    {
+        private int dia;
+        private int mes;
+        private int ano;
+
+        public int Dia
+        {
+            get { return dia; } 
+            set {
+                if (value > 0 && value < 32)
+                {
+                    dia = value;
+                }
+            }
+        }
+        public int Mes
+        {
+            get { return mes; }
+            set
+            {
+                if (value > 0 && value < 13)
+                {
+                    mes = value;
+                }
+            }
+        }
+        public int Ano
+        {
+            get { return ano; }
+            set
+            {
+                ano = value;
+            }
+        }
+    }
     class Reserva
     {
-        private int diaInicio;
-        private int diaFim;
+        private data diaInicio;
+        private data diaFim;
         private string cliente;
         private Quarto quarto;
         private char status;
 
-        public int DiaInicio
+        public data DiaInicio
         {
             get { return diaInicio; }
         }
-        public int DiaFim
+        public data DiaFim
         {
             get { return DiaFim; }
         }
@@ -46,10 +82,14 @@ namespace GerenciadorDePousada_Trab_OOP
         public Reserva(string linhaArquivo, Pousada p)
         {
             string[] array = linhaArquivo.Split(";");
-            diaInicio = int.Parse(array[0]);
-            diaFim = int.Parse(array[0]);
-            cliente = array[1];
-            int numQuarto = int.Parse(array[2]);
+            diaInicio.Dia = int.Parse(array[0]);
+            diaInicio.Mes = int.Parse(array[1]);
+            diaInicio.Ano = int.Parse(array[2]);
+            diaInicio.Dia = int.Parse(array[3]);
+            diaInicio.Mes = int.Parse(array[4]);
+            diaInicio.Ano = int.Parse(array[5]);
+            cliente = array[6];
+            int numQuarto = int.Parse(array[7]);
             for(int i = 0; i < p.Quartos.Count; i++)
             {
                 if(p.Quartos[i].Numero == numQuarto)
@@ -57,9 +97,9 @@ namespace GerenciadorDePousada_Trab_OOP
                     quarto = p.Quartos[i]; 
                 }
             }
-            status = char.Parse(array[3]);
+            status = char.Parse(array[8]);
         }
-        public Reserva(int diaInicio, int diaFim, string cliente, Quarto quarto, char status)
+        public Reserva(data diaInicio, data diaFim, string cliente, Quarto quarto, char status)
         {
             this.diaInicio = diaInicio;
             this.diaFim = diaFim;
@@ -70,8 +110,23 @@ namespace GerenciadorDePousada_Trab_OOP
 
         public string serializar()
         {
-            StringBuilder sb = new StringBuilder(this.diaInicio);
+            StringBuilder sb = new StringBuilder(this.diaInicio.Dia);
             sb.Append(";");
+            sb.Append(diaInicio.Mes);
+            sb.Append(";");
+            sb.Append(diaInicio.Ano);
+            sb.Append(";");
+            sb.Append(diaFim.Dia);
+            sb.Append(";");
+            sb.Append(diaFim.Mes);
+            sb.Append(";");
+            sb.Append(diaFim.Ano);
+            sb.Append(";");
+            sb.Append(cliente);
+            sb.Append(";");
+            sb.Append(quarto.Numero);
+            sb.Append(";");
+            sb.Append(status);
             return sb.ToString();
         }
     }

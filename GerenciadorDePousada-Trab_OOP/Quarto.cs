@@ -62,24 +62,57 @@ namespace GerenciadorDePousada_Trab_OOP
         {
             StringBuilder sb = new StringBuilder(this.numero);
             sb.Append(";");
+            sb.Append(categoria);
+            sb.Append(";");
+            sb.Append(diaria);
+            sb.Append(";");
+            for(int i = 0; i < consumo.Count; i++)
+            {
+                sb.Append(consumo[i]);
+                sb.Append(";");
+            }
             return sb.ToString();
         }
 
         public void adicionaConsumo(int consumo)
         {
+            this.consumo.Add(consumo);
+        }
+        public void listaConsumo(Pousada p)
+        {
+            Console.WriteLine("Produtos consumidos: ");
+            for (int i = 0; i < consumo.Count; i++)
+            {
+                if(p.Produtos.Count > (i - 1))
+                {
+                    Console.Write(p.Produtos[i].Nome + ", ");
+                }
+                else
+                {
+                    Console.Write(p.Produtos[i].Nome + ".");
+                }
 
+            }
         }
-        public void listaConsumo()
-        { 
-        }
-        public float valorTotalConsumo()
+        public float valorTotalConsumo(Pousada p)
         {
             float valor = 0.0f;
+            for(int i = 0; i < consumo.Count; i++)
+            {
+                for (int j = 0; j < consumo.Count; j++)
+                {
+
+                    if (consumo[i] == p.Produtos[j].Codigo)
+                    {
+                        valor += p.Produtos[j].Preco;
+                    }
+                }
+            }
             return valor;
         }
         public void limpaConsumo()
         {
-
+            consumo.Clear();
         }
     }
 }

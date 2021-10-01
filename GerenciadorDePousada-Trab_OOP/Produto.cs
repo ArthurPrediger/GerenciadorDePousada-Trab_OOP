@@ -16,12 +16,19 @@ namespace GerenciadorDePousada_Trab_OOP
         {
             get { return codigo; }
         }
+        public string Nome
+        {
+            get { return nome; }
+        }
+        public float Preco
+        {
+            get { return preco; }
+        }
 
         public Produto()
         {
 
         }
-
         public Produto(string linhaArquivo)
         {
             string[] array = linhaArquivo.Split(";");
@@ -29,7 +36,6 @@ namespace GerenciadorDePousada_Trab_OOP
             nome = array[1];
             preco = float.Parse(array[2]);
         }
-
         public Produto(int codigo, string nome, float preco)
         {
             this.codigo = codigo;
@@ -41,6 +47,9 @@ namespace GerenciadorDePousada_Trab_OOP
         {
             StringBuilder sb = new StringBuilder(this.codigo);
             sb.Append(";");
+            sb.Append(nome);
+            sb.Append(";");
+            sb.Append(preco);
             return sb.ToString();
         }
 
