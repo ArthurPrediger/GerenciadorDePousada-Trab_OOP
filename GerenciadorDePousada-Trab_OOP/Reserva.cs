@@ -42,6 +42,8 @@ namespace GerenciadorDePousada_Trab_OOP
             }
         }
 
+        public Data()
+        { }
         public Data(int dia, int mes, int ano)
         {
             this.dia = dia;

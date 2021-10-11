@@ -67,9 +67,9 @@ namespace GerenciadorDePousada_Trab_OOP
                 Console.WriteLine("Informe uma data: ");
                 Console.Write("Dia: ");
                 int dia = int.Parse(Console.ReadLine());
-                Console.Write("Dia: ");
+                Console.Write("Mês: ");
                 int mes = int.Parse(Console.ReadLine());
-                Console.Write("Dia: ");
+                Console.Write("Ano: ");
                 int ano = int.Parse(Console.ReadLine());
                 Console.WriteLine("Informe um número de quarto: ");
                 int numQ = int.Parse(Console.ReadLine());
@@ -80,33 +80,106 @@ namespace GerenciadorDePousada_Trab_OOP
             }
             else if (input == 2)
             {
-                p.consultaReserva();
+                Data data = new Data();
+                string nomeC = "";
+                int numQ = 0;
+                Console.WriteLine("Escolha qual informação deseja passar para consulta:");
+                Console.WriteLine("1 - Data específica;");
+                Console.WriteLine("2 - Nome de cliente;");
+                Console.WriteLine("3 - Número de quarto;");
+                Console.WriteLine("4 - Continuar com as informações já passadas ou sair sem informar nada.");
+                int i = int.Parse(Console.ReadLine());
+                do
+                {
+                    if(i == 1)
+                    {
+                        Console.WriteLine("Escolha qual informação deseja passar para consulta:");
+                        Console.WriteLine("Informe uma data: ");
+                        Console.Write("Dia: ");
+                        data.Dia = int.Parse(Console.ReadLine());
+                        Console.Write("Mês: ");
+                        data.Mes = int.Parse(Console.ReadLine());
+                        Console.Write("Ano: ");
+                        data.Ano = int.Parse(Console.ReadLine());
+                    }
+                    else if(i == 2)
+                    {
+                        Console.WriteLine("Informe um nome de cliente: ");
+                        nomeC = Console.ReadLine();
+                    }
+                    else if(i == 3)
+                    {
+                        Console.WriteLine("Informe um número de quarto: ");
+                        numQ = int.Parse(Console.ReadLine());
+                    }
+                } while (i != 4);
+
+                p.consultaReserva(data, nomeC, numQ);
+                Console.WriteLine("Pressione qualquer tecla para voltar ao menu. ");
+                Console.ReadLine();
                 menuReservas(ref p);
             }
             else if (input == 3)
             {
-                p.realizaReserva();
+                Data dataI = new();
+                Data dataF = new();
+                Console.WriteLine("Informe uma data inicial: ");
+                Console.Write("Dia: ");
+                dataI.Dia = int.Parse(Console.ReadLine());
+                Console.Write("Mês: ");
+                dataI.Mes = int.Parse(Console.ReadLine());
+                Console.Write("Ano: ");
+                dataI.Ano = int.Parse(Console.ReadLine());
+                Console.WriteLine("Informe uma data final: ");
+                Console.Write("Dia: ");
+                dataF.Dia = int.Parse(Console.ReadLine());
+                Console.Write("Mês: ");
+                dataF.Mes = int.Parse(Console.ReadLine());
+                Console.Write("Ano: ");
+                dataF.Ano = int.Parse(Console.ReadLine());
+                Console.WriteLine("Informe o nome do cliente: ");
+                string nomeC = Console.ReadLine();
+                Console.WriteLine("Informe o número do quarto: ");
+                int numQ = int.Parse(Console.ReadLine());
+                p.realizaReserva(dataI, dataF, nomeC, numQ);
+                Console.WriteLine("Pressione qualquer tecla para voltar ao menu. ");
+                Console.ReadLine();
                 menuReservas(ref p);
             }
             else if (input == 4)
             {
-                p.cancelaReserva();
+                Console.WriteLine("Informe o nome do cliente: ");
+                string nomeC = Console.ReadLine();
+                p.cancelaReserva(nomeC);
+                Console.WriteLine("Pressione qualquer tecla para voltar ao menu. ");
+                Console.ReadLine();
                 menuReservas(ref p);
             }
             else if (input == 5)
             {
-                p.realizaCheckIn();
+                Console.WriteLine("Informe o nome do cliente: ");
+                string nomeC = Console.ReadLine();
+                p.realizaCheckIn(nomeC);
+                Console.WriteLine("Pressione qualquer tecla para voltar ao menu. ");
+                Console.ReadLine();
                 menuReservas(ref p);
             }
             else if (input == 6)
             {
-                p.realizaCheckOut();
+                Console.WriteLine("Informe o nome do cliente: ");
+                string nomeC = Console.ReadLine();
+                p.realizaCheckOut(nomeC);
+                Console.WriteLine("Pressione qualquer tecla para voltar ao menu. ");
+                Console.ReadLine();
                 menuReservas(ref p);
             }
             else if (input == 7)
             {
-                int numQ;
-                p.Quartos[numQ].adicionaConsumo();
+                Console.WriteLine("Informe o nome do cliente: ");
+                string nomeC = Console.ReadLine();
+                p.registraConsumo(nomeC);
+                Console.WriteLine("Pressione qualquer tecla para voltar ao menu. ");
+                Console.ReadLine();
                 menuReservas(ref p);
             }
             else if (input == 8)
