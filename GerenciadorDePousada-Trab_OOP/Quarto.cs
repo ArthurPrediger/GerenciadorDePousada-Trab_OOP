@@ -16,14 +16,35 @@ namespace GerenciadorDePousada_Trab_OOP
         public int Numero
         {
             get { return numero ; }
+            set
+            {
+                if(value > 0)
+                {
+                    numero = value;
+                }
+            }
         }
         public char Categoria
         {
             get { return categoria; }
+            set
+            {
+                if(value == 'S' || value == 'M' || value == 'P')
+                {
+                    categoria = value;
+                }
+            }
         }
         public float Diaria
         {
             get { return diaria; }
+            set
+            {
+                if(value > 0)
+                {
+                    diaria = value;
+                }
+            }
         }
         public List<int> Consumo
         {
@@ -45,17 +66,12 @@ namespace GerenciadorDePousada_Trab_OOP
                 consumo[i - 2] = int.Parse(array[i]);
             }
         }
-        public Quarto(int numero, char categoria, float diaria, List<int> consumo)
+        public Quarto(int numero, char categoria, float diaria)
         {
             this.numero = numero;
             this.categoria = categoria;
             this.diaria = diaria;
             int indice = 0;
-            foreach (int i in consumo)
-            {
-                this.consumo[indice] = i;
-                indice++;
-            }
         }
 
         public string serializar()

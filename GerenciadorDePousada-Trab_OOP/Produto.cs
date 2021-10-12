@@ -15,14 +15,23 @@ namespace GerenciadorDePousada_Trab_OOP
         public int Codigo
         {
             get { return codigo; }
+            set { codigo = value; }
         }
         public string Nome
         {
             get { return nome; }
+            set { nome = value; }
         }
         public float Preco
         {
             get { return preco; }
+            set
+            {
+                if(value > 0)
+                {
+                    preco = value;
+                }
+            }
         }
 
         public Produto()

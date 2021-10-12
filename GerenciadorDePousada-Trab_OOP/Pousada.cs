@@ -15,6 +15,16 @@ namespace GerenciadorDePousada_Trab_OOP
         private List<Reserva> reservas = new List<Reserva>();
         private List<Produto> produtos = new List<Produto>();
 
+        public string Nome
+        {
+            get { return nome; }
+            set { nome = value; }
+        }
+        public string Contato
+        {
+            get { return contato; }
+            set { contato = value; }
+        }
         public List<Quarto> Quartos
         {
             get { return quartos; }
@@ -344,6 +354,15 @@ namespace GerenciadorDePousada_Trab_OOP
                 }
             }
 
+            if(quartos.Exists(x => x.Numero == quarto))
+            {
+                reservas.Add(new Reserva(dataInicial, dataFinal, cliente, quartos.Find(x => x.Numero == quarto), ' '));
+            }
+            else
+            {
+                reservaLiberada = false;
+            }
+
             if (reservaLiberada)
             {
                 Console.WriteLine("Reserva realizada com sucesso.");
@@ -423,6 +442,7 @@ namespace GerenciadorDePousada_Trab_OOP
                     Console.WriteLine("Data final: " + reservas[i].DiaFim);
                     Console.WriteLine("Valor total das diárias: R$ " + (float.Parse(dias) * reservas[i].Quarto.Diaria));
                     Console.WriteLine("Valor total dos consumos: R$ " + reservas[i].Quarto.valorTotalConsumo(this));
+                    reservas[i].Quarto.listaConsumo(this);
                     Console.WriteLine("Valor final a ser pago: R$ " + vt);
                     reservas[i].Status = 'O';
                     reservas[i].Quarto.limpaConsumo();
