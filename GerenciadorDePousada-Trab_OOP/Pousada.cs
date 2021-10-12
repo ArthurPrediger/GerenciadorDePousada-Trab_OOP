@@ -47,39 +47,43 @@ namespace GerenciadorDePousada_Trab_OOP
 
         public void carregaDados()
         {
-            StreamReader sr = new StreamReader("pousada.txt");
-            nome = sr.ReadLine();
-            contato = sr.ReadLine();
-
-            sr = new StreamReader("produto.txt");
-            string linha = sr.ReadLine();
-            int indice = 0;
-            while (!sr.EndOfStream)
+            if (File.Exists("pousada.txt") && File.Exists("quarto.txt") &&
+                File.Exists("produto.txt") && File.Exists("reserva.txt"))
             {
-                produtos[indice] = new Produto(linha);
-                linha = sr.ReadLine();
-                indice++;
-            }
+                StreamReader sr = new StreamReader("pousada.txt");
+                nome = sr.ReadLine();
+                contato = sr.ReadLine();
 
-            sr = new StreamReader("quarto.txt");
-            linha = sr.ReadLine();
-            while(!sr.EndOfStream)
-            {
-                quartos[indice] = new Quarto(linha);
-                linha = sr.ReadLine();
-                indice++;
-            }
+                sr = new StreamReader("produto.txt");
+                string linha = sr.ReadLine();
+                int indice = 0;
+                while (!sr.EndOfStream)
+                {
+                    produtos[indice] = new Produto(linha);
+                    linha = sr.ReadLine();
+                    indice++;
+                }
 
-            sr = new StreamReader("reserva.txt");
-            linha = sr.ReadLine();
-            indice = 0;
-            while (!sr.EndOfStream)
-            {
-                reservas[indice] = new Reserva(linha, this);
+                sr = new StreamReader("quarto.txt");
                 linha = sr.ReadLine();
-                indice++;
+                while (!sr.EndOfStream)
+                {
+                    quartos[indice] = new Quarto(linha);
+                    linha = sr.ReadLine();
+                    indice++;
+                }
+
+                sr = new StreamReader("reserva.txt");
+                linha = sr.ReadLine();
+                indice = 0;
+                while (!sr.EndOfStream)
+                {
+                    reservas[indice] = new Reserva(linha, this);
+                    linha = sr.ReadLine();
+                    indice++;
+                }
+                sr.Close();
             }
-            sr.Close();
         }
 
         public void salvaDados()

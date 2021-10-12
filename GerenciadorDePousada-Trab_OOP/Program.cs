@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace GerenciadorDePousada_Trab_OOP
 {
@@ -18,17 +19,25 @@ namespace GerenciadorDePousada_Trab_OOP
 
             if(input == 1)
             {
-                Console.WriteLine("Informe o nome da pousada: ");
-                string nome = Console.ReadLine();
-                Console.WriteLine("Informe o contato da pousada: ");
-                string contato = Console.ReadLine();
-                p = new Pousada(nome, contato);
                 menuCadastros(ref p);
             }
             else
             {
-                p.carregaDados();
-                menuReservas(ref p);
+                if (File.Exists("pousada.txt") && File.Exists("quarto.txt") &&
+                       File.Exists("produto.txt") && File.Exists("reserva.txt"))
+                {
+                    p.carregaDados();
+                    menuReservas(ref p);
+                }
+                else
+                {
+                    Console.WriteLine("Não há nenhum arquivos salvo previamente para leitura.");
+                    Console.WriteLine("O programa será redirecionado para o menu de cadastro de nova pousada.");
+                    Console.WriteLine("Pressione qualquer tecla para continuar.");
+                    Console.ReadLine();
+                    menuCadastros(ref p);
+                }
+
             }
 
         }
