@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace GerenciadorDePousada_Trab_OOP
 {
+    //Classe para gerenciamneto de datas
     class Data
     {
         private int dia;
@@ -65,7 +66,7 @@ namespace GerenciadorDePousada_Trab_OOP
         }
         public Data DiaFim
         {
-            get { return DiaFim; }
+            get { return diaFim; }
         }
         public string Cliente
         {
@@ -88,15 +89,13 @@ namespace GerenciadorDePousada_Trab_OOP
         {
 
         }
+
+        //Construtor para realizar desserialização
         public Reserva(string linhaArquivo, Pousada p)
         {
             string[] array = linhaArquivo.Split(";");
-            diaInicio.Dia = int.Parse(array[0]);
-            diaInicio.Mes = int.Parse(array[1]);
-            diaInicio.Ano = int.Parse(array[2]);
-            diaInicio.Dia = int.Parse(array[3]);
-            diaInicio.Mes = int.Parse(array[4]);
-            diaInicio.Ano = int.Parse(array[5]);
+            diaInicio = new Data(int.Parse(array[0]), int.Parse(array[1]), int.Parse(array[2]));
+            diaFim = new Data(int.Parse(array[3]), int.Parse(array[4]), int.Parse(array[5]));
             cliente = array[6];
             int numQuarto = int.Parse(array[7]);
             for(int i = 0; i < p.Quartos.Count; i++)
@@ -119,7 +118,7 @@ namespace GerenciadorDePousada_Trab_OOP
 
         public string serializar()
         {
-            StringBuilder sb = new StringBuilder(this.diaInicio.Dia);
+            StringBuilder sb = new StringBuilder(this.diaInicio.Dia.ToString());
             sb.Append(";");
             sb.Append(diaInicio.Mes);
             sb.Append(";");

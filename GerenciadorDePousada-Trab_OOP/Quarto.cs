@@ -55,15 +55,17 @@ namespace GerenciadorDePousada_Trab_OOP
         {
 
         }
+
+        //Construtor para realizar desserialização
         public Quarto(string linhaArquivo)
         {
             string[] array = linhaArquivo.Split(";");
             numero = int.Parse(array[0]);
             categoria =char.Parse(array[1]);
             diaria = float.Parse(array[2]);
-            for(int i = 2; i < array.Length; i++)
+            for (int i = 3; i < array.Length; i++)
             {
-                consumo[i - 2] = int.Parse(array[i]);
+                consumo.Add(int.Parse(array[i]));
             }
         }
         public Quarto(int numero, char categoria, float diaria)
@@ -76,16 +78,15 @@ namespace GerenciadorDePousada_Trab_OOP
 
         public string serializar()
         {
-            StringBuilder sb = new StringBuilder(this.numero);
+            StringBuilder sb = new StringBuilder(this.numero.ToString());
             sb.Append(";");
             sb.Append(categoria);
             sb.Append(";");
             sb.Append(diaria);
-            sb.Append(";");
             for(int i = 0; i < consumo.Count; i++)
             {
-                sb.Append(consumo[i]);
                 sb.Append(";");
+                sb.Append(consumo[i]);
             }
             return sb.ToString();
         }
@@ -99,13 +100,14 @@ namespace GerenciadorDePousada_Trab_OOP
             Console.WriteLine("Produtos consumidos: ");
             for (int i = 0; i < consumo.Count; i++)
             {
-                if(p.Produtos.Count > (i - 1))
+                Produto pro = p.Produtos.Find(x => x.Codigo == consumo[i]);
+                if(i < (consumo.Count - 1))
                 {
-                    Console.Write(p.Produtos[i].Nome + ", ");
+                    Console.Write(pro.Nome + ", ");
                 }
                 else
                 {
-                    Console.Write(p.Produtos[i].Nome + ".");
+                    Console.Write(pro.Nome + ".\n");
                 }
 
             }
@@ -115,14 +117,8 @@ namespace GerenciadorDePousada_Trab_OOP
             float valor = 0.0f;
             for(int i = 0; i < consumo.Count; i++)
             {
-                for (int j = 0; j < consumo.Count; j++)
-                {
-
-                    if (consumo[i] == p.Produtos[j].Codigo)
-                    {
-                        valor += p.Produtos[j].Preco;
-                    }
-                }
+                Produto pro = p.Produtos.Find(x => x.Codigo == consumo[i]);
+                valor += pro.Preco;
             }
             return valor;
         }

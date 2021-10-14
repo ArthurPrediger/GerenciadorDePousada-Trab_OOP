@@ -38,6 +38,8 @@ namespace GerenciadorDePousada_Trab_OOP
         {
 
         }
+
+        //Construtor para realizar desserialização
         public Produto(string linhaArquivo)
         {
             string[] array = linhaArquivo.Split(";");
@@ -54,7 +56,7 @@ namespace GerenciadorDePousada_Trab_OOP
 
         public string serializar()
         {
-            StringBuilder sb = new StringBuilder(this.codigo);
+            StringBuilder sb = new StringBuilder(this.codigo.ToString());
             sb.Append(";");
             sb.Append(nome);
             sb.Append(";");

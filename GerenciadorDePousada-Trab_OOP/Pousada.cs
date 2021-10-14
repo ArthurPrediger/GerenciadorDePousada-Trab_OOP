@@ -33,7 +33,6 @@ namespace GerenciadorDePousada_Trab_OOP
         {
             get { return produtos; }
         }
-
         public Pousada()
         {
 
@@ -45,70 +44,73 @@ namespace GerenciadorDePousada_Trab_OOP
             this.contato = contato;
         }
 
+        //Método para carregar os dados dos arquivos
+        //Faz as chamadas dos construtores de desserilização para todos os tipos de objetos das listas
         public void carregaDados()
         {
             if (File.Exists("pousada.txt") && File.Exists("quarto.txt") &&
                 File.Exists("produto.txt") && File.Exists("reserva.txt"))
             {
-                StreamReader sr = new StreamReader("pousada.txt");
+                StreamReader sr = File.OpenText("pousada.txt");
                 nome = sr.ReadLine();
                 contato = sr.ReadLine();
-
-                sr = new StreamReader("produto.txt");
-                string linha = sr.ReadLine();
-                int indice = 0;
+                sr.Close();
+                sr = File.OpenText("produto.txt");
+                string linha;
                 while (!sr.EndOfStream)
                 {
-                    produtos[indice] = new Produto(linha);
                     linha = sr.ReadLine();
-                    indice++;
+                    produtos.Add(new Produto(linha));
                 }
-
-                sr = new StreamReader("quarto.txt");
-                linha = sr.ReadLine();
+                sr.Close();
+                sr = File.OpenText("quarto.txt");
                 while (!sr.EndOfStream)
                 {
-                    quartos[indice] = new Quarto(linha);
                     linha = sr.ReadLine();
-                    indice++;
+                    quartos.Add(new Quarto(linha));
                 }
-
-                sr = new StreamReader("reserva.txt");
-                linha = sr.ReadLine();
-                indice = 0;
+                sr.Close();
+                sr = File.OpenText("reserva.txt");
                 while (!sr.EndOfStream)
                 {
-                    reservas[indice] = new Reserva(linha, this);
                     linha = sr.ReadLine();
-                    indice++;
+                    reservas.Add(new Reserva(linha, this));
                 }
                 sr.Close();
             }
         }
 
+        //Método para salvar os dados nos arquivos
+        //Faz as chamadas dos métodos de serialização para todos os tipos de objetos das listas
         public void salvaDados()
         {
-            StreamWriter sw = new StreamWriter("pousada.txt");
+            StreamWriter sw = File.CreateText("pousada.txt");
             sw.WriteLine(nome);
             sw.WriteLine(contato);
-            for (int i = 0; i < quartos.Count; i++)
+            sw.Close();
+            sw = File.CreateText("quarto.txt");
+            foreach(var quarto in quartos)
             {
-                sw.WriteLine(quartos[i].serializar());
-            }
-            sw = new StreamWriter("quarto.txt");
-            for (int i = 0; i < quartos.Count; i++)
-            {
-                if(reservas[i].Status != 'C' && reservas[i].Status != 'O')
-                {
-                    sw.WriteLine(reservas[i].serializar());
-                }
-            }
-            sw = new StreamWriter("produto.txt");
-            for (int i = 0; i < quartos.Count; i++)
-            {
-                sw.WriteLine(produtos[i].serializar());
+                sw.WriteLine(quarto.serializar());
             }
             sw.Close();
+            sw = File.CreateText("reserva.txt");
+            foreach (var reserva in reservas)
+            {
+                //Não salva as reservas canceladas e as reservas em check-out
+                if(reserva.Status != 'C' && reserva.Status != 'O')
+                {
+                    sw.WriteLine(reserva.serializar());
+                }
+            }
+            sw.Close();
+            sw = File.CreateText("produto.txt");
+            foreach (var produto in produtos)
+            {
+                sw.WriteLine(produto.serializar());
+            }
+            sw.Close();
+
         }
 
         public void consultaDisponibilidade(Data data, int quarto)
@@ -162,8 +164,10 @@ namespace GerenciadorDePousada_Trab_OOP
                         && (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
                     {
                         Console.WriteLine(cont + " - Reserva:");
-                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
-                        Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio.Dia.ToString() + "/" +
+                            reservas[i].DiaInicio.Mes.ToString() + "/" + reservas[i].DiaInicio.Ano.ToString());
+                        Console.WriteLine("Data final: " + reservas[i].DiaFim.Dia.ToString() + "/" +
+                            reservas[i].DiaFim.Mes.ToString() + "/" + reservas[i].DiaFim.Ano.ToString());
                         Console.WriteLine("Nome do cliente: " + reservas[i].Cliente);
                         Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
                         Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
@@ -183,8 +187,10 @@ namespace GerenciadorDePousada_Trab_OOP
                         && (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
                     {
                         Console.WriteLine(cont + " - Reserva:");
-                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
-                        Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio.Dia.ToString() + "/" +
+                            reservas[i].DiaInicio.Mes.ToString() + "/" + reservas[i].DiaInicio.Ano.ToString());
+                        Console.WriteLine("Data final: " + reservas[i].DiaFim.Dia.ToString() + "/" +
+                            reservas[i].DiaFim.Mes.ToString() + "/" + reservas[i].DiaFim.Ano.ToString());
                         Console.WriteLine("Nome do cliente: " + reservas[i].Cliente);
                         Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
                         Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
@@ -209,8 +215,10 @@ namespace GerenciadorDePousada_Trab_OOP
                         (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
                     {
                         Console.WriteLine(cont + " - Reserva:");
-                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
-                        Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio.Dia.ToString() + "/" +
+                            reservas[i].DiaInicio.Mes.ToString() + "/" + reservas[i].DiaInicio.Ano.ToString());
+                        Console.WriteLine("Data final: " + reservas[i].DiaFim.Dia.ToString() + "/" +
+                            reservas[i].DiaFim.Mes.ToString() + "/" + reservas[i].DiaFim.Ano.ToString());
                         Console.WriteLine("Nome do cliente: " + reservas[i].Cliente);
                         Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
                         Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
@@ -234,8 +242,10 @@ namespace GerenciadorDePousada_Trab_OOP
                         reservas[i].Cliente == cliente && (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
                     {
                         Console.WriteLine(cont + " - Reserva:");
-                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
-                        Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio.Dia.ToString() + "/" +
+                            reservas[i].DiaInicio.Mes.ToString() + "/" + reservas[i].DiaInicio.Ano.ToString());
+                        Console.WriteLine("Data final: " + reservas[i].DiaFim.Dia.ToString() + "/" +
+                            reservas[i].DiaFim.Mes.ToString() + "/" + reservas[i].DiaFim.Ano.ToString());
                         Console.WriteLine("Nome do cliente: " + reservas[i].Cliente);
                         Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
                         Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
@@ -254,8 +264,10 @@ namespace GerenciadorDePousada_Trab_OOP
                     if (reservas[i].Cliente == cliente && (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
                     {
                         Console.WriteLine(cont + " - Reserva:");
-                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
-                        Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio.Dia.ToString() + "/" +
+                            reservas[i].DiaInicio.Mes.ToString() + "/" + reservas[i].DiaInicio.Ano.ToString());
+                        Console.WriteLine("Data final: " + reservas[i].DiaFim.Dia.ToString() + "/" +
+                            reservas[i].DiaFim.Mes.ToString() + "/" + reservas[i].DiaFim.Ano.ToString());
                         Console.WriteLine("Nome do cliente: " + reservas[i].Cliente);
                         Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
                         Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
@@ -279,8 +291,10 @@ namespace GerenciadorDePousada_Trab_OOP
                         (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
                     {
                         Console.WriteLine(cont + " - Reserva:");
-                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
-                        Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio.Dia.ToString() + "/" +
+                            reservas[i].DiaInicio.Mes.ToString() + "/" + reservas[i].DiaInicio.Ano.ToString());
+                        Console.WriteLine("Data final: " + reservas[i].DiaFim.Dia.ToString() + "/" +
+                            reservas[i].DiaFim.Mes.ToString() + "/" + reservas[i].DiaFim.Ano.ToString());
                         Console.WriteLine("Nome do cliente: " + reservas[i].Cliente);
                         Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
                         Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
@@ -299,8 +313,10 @@ namespace GerenciadorDePousada_Trab_OOP
                     if (reservas[i].Quarto.Numero == quarto && (reservas[i].Status == 'A' || reservas[i].Status == 'I'))
                     {
                         Console.WriteLine(cont + " - Reserva:");
-                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
-                        Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                        Console.WriteLine("Data inicial: " + reservas[i].DiaInicio.Dia.ToString() + "/" +
+                            reservas[i].DiaInicio.Mes.ToString() + "/" + reservas[i].DiaInicio.Ano.ToString());
+                        Console.WriteLine("Data final: " + reservas[i].DiaFim.Dia.ToString() + "/" +
+                            reservas[i].DiaFim.Mes.ToString() + "/" + reservas[i].DiaFim.Ano.ToString());
                         Console.WriteLine("Nome do cliente: " + reservas[i].Cliente);
                         Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
                         Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
@@ -319,17 +335,15 @@ namespace GerenciadorDePousada_Trab_OOP
         public void realizaReserva(Data dataInicial, Data dataFinal, string cliente, int quarto) 
         {
             bool reservaLiberada = true;
-            StringBuilder sw1 = new StringBuilder(dataInicial.Ano.ToString() + "/" + dataInicial.Mes.ToString() +
-                                     "/" + dataInicial.Dia.ToString());
-            StringBuilder sw2 = new StringBuilder(dataFinal.Ano.ToString() + "/" + dataFinal.Mes.ToString() +
-                                     "/" + dataFinal.Dia.ToString());
+            StringBuilder sw1 = new StringBuilder(dataInicial.Ano.ToString() + " " + dataInicial.Mes.ToString() +
+                                     " " + dataInicial.Dia.ToString());
+            StringBuilder sw2 = new StringBuilder(dataFinal.Ano.ToString() + " " + dataFinal.Mes.ToString() +
+                                     " " + dataFinal.Dia.ToString());
             DateTime dataPI, dataPF;
-            if (!DateTime.TryParse(sw1.ToString(), out dataPI))
-            {
-                reservaLiberada = false;
-            }
-            if (!DateTime.TryParse(sw2.ToString(), out dataPF) ||
-                dataPI.CompareTo(dataPF) >= 0 ||
+            DateTime.TryParse(sw1.ToString(), out dataPI);
+            DateTime.TryParse(sw2.ToString(), out dataPF);
+
+            if (dataPI.CompareTo(dataPF) >= 0 ||
                 dataPI.CompareTo(DateTime.Now) < 0)
             {
                 reservaLiberada = false;
@@ -358,7 +372,7 @@ namespace GerenciadorDePousada_Trab_OOP
                 }
             }
 
-            if(quartos.Exists(x => x.Numero == quarto))
+            if(quartos.Exists(x => x.Numero == quarto) && reservaLiberada)
             {
                 reservas.Add(new Reserva(dataInicial, dataFinal, cliente, quartos.Find(x => x.Numero == quarto), ' '));
             }
@@ -398,58 +412,55 @@ namespace GerenciadorDePousada_Trab_OOP
         public void realizaCheckIn(string cliente)
         {
             bool reservaExistente = false;
-            for (int i = 0; i < reservas.Count; i++)
+            if (reservas.Exists(x=> x.Cliente == cliente))
             {
-                if (reservas[i].Cliente == cliente && reservas[i].Status != 'C' &&
-                    reservas[i].Status != 'O')
+                Reserva r = reservas.Find(x => x.Cliente == cliente);
+                if (r.Status == ' ')
                 {
-                    DateTime di = new DateTime(reservas[i].DiaInicio.Ano, reservas[i].DiaInicio.Mes,
-                                                reservas[i].DiaInicio.Dia);
-                    DateTime df = new DateTime(reservas[i].DiaFim.Ano, reservas[i].DiaFim.Mes,
-                                                reservas[i].DiaFim.Dia);
-                    string dias = df.Subtract(di).ToString();
+                    DateTime di = new DateTime(r.DiaInicio.Ano, r.DiaInicio.Mes, r.DiaInicio.Dia);
+                    DateTime df = new DateTime(r.DiaFim.Ano, r.DiaFim.Mes, r.DiaFim.Dia);
+                    string dias = df.Subtract(di).Days.ToString();
                     Console.WriteLine("Check-in realizado com sucesso.");
-                    reservas[i].Status = 'I';
+                    r.Status = 'I';
                     Console.WriteLine("Reserva:");
-                    Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
-                    Console.WriteLine("Data final: " + reservas[i].DiaFim);
+                    Console.WriteLine("Data inicial: " + di.ToString());
+                    Console.WriteLine("Data final: " + df.ToString());
                     Console.WriteLine("Quantidade de dias reservados: " + dias);
-                    Console.WriteLine("Número do quarto: " + reservas[i].Quarto.Numero);
-                    Console.WriteLine("Categoria do quarto: " + reservas[i].Quarto.Categoria);
-                    Console.WriteLine("Valor total das diárias: R$ " + (float.Parse(dias) * reservas[i].Quarto.Diaria));
+                    Console.WriteLine("Número do quarto: " + r.Quarto.Numero);
+                    Console.WriteLine("Categoria do quarto: " + r.Quarto.Categoria);
+                    float valor = float.Parse(dias) * r.Quarto.Diaria;
+                    Console.WriteLine("Valor total das diárias: R$ " + valor.ToString());
                     reservaExistente = true;
                 }
             }
 
             if (!reservaExistente)
             {
-                Console.WriteLine("Não há nenhuma reserva existente para este cliente.");
+                Console.WriteLine("Não há nenhuma reserva esperando check-in para este cliente.");
             }
         }
         public void realizaCheckOut(string cliente) 
         {
             bool reservaExistente = false;
-            for (int i = 0; i < reservas.Count; i++)
+            if (reservas.Exists(x => x.Cliente == cliente))
             {
-                if (reservas[i].Cliente == cliente && reservas[i].Status == 'A' &&
-                    reservas[i].Status == 'I')
+                Reserva r = reservas.Find(x => x.Cliente == cliente);
+                if (r.Status == 'A' || r.Status == 'I')
                 {
-                    DateTime di = new DateTime(reservas[i].DiaInicio.Ano, reservas[i].DiaInicio.Mes,
-                            reservas[i].DiaInicio.Dia);
-                    DateTime df = new DateTime(reservas[i].DiaFim.Ano, reservas[i].DiaFim.Mes,
-                                                reservas[i].DiaFim.Dia);
-                    string dias = df.Subtract(di).ToString();
-                    float vt = float.Parse(dias) * reservas[i].Quarto.Diaria + reservas[i].Quarto.valorTotalConsumo(this);
+                    DateTime di = new DateTime(r.DiaInicio.Ano, r.DiaInicio.Mes, r.DiaInicio.Dia);
+                    DateTime df = new DateTime(r.DiaFim.Ano, r.DiaFim.Mes, r.DiaFim.Dia);
+                    string dias = df.Subtract(di).Days.ToString();
+                    float vt = float.Parse(dias) * r.Quarto.Diaria + r.Quarto.valorTotalConsumo(this);
                     Console.WriteLine("Check-out realizado com sucesso.");
                     Console.WriteLine("Reserva:");
-                    Console.WriteLine("Data inicial: " + reservas[i].DiaInicio);
-                    Console.WriteLine("Data final: " + reservas[i].DiaFim);
-                    Console.WriteLine("Valor total das diárias: R$ " + (float.Parse(dias) * reservas[i].Quarto.Diaria));
-                    Console.WriteLine("Valor total dos consumos: R$ " + reservas[i].Quarto.valorTotalConsumo(this));
-                    reservas[i].Quarto.listaConsumo(this);
+                    Console.WriteLine("Data inicial: " + r.DiaInicio);
+                    Console.WriteLine("Data final: " + r.DiaFim);
+                    Console.WriteLine("Valor total das diárias: R$ " + (float.Parse(dias) * r.Quarto.Diaria));
+                    Console.WriteLine("Valor total dos consumos: R$ " + r.Quarto.valorTotalConsumo(this));
+                    r.Quarto.listaConsumo(this);
                     Console.WriteLine("Valor final a ser pago: R$ " + vt);
-                    reservas[i].Status = 'O';
-                    reservas[i].Quarto.limpaConsumo();
+                    r.Status = 'O';
+                    r.Quarto.limpaConsumo();
                     reservaExistente = true;
                 }
             }
@@ -462,27 +473,28 @@ namespace GerenciadorDePousada_Trab_OOP
         public void registraConsumo(string cliente)
         {
             bool existeCheckIn = false;
-            for(int i = 0; i < reservas.Count; i++)
+            if (reservas.Exists(x => x.Cliente == cliente))
             {
-                if(reservas[i].Cliente == cliente && (reservas[i].Status == 'I'
-                    || reservas[i].Status == 'I'))
+                Reserva r = reservas.Find(x => x.Cliente == cliente);
+                if (r.Status == 'A' || r.Status == 'I')
                 {
                     existeCheckIn = true;
                     Console.WriteLine("Produtos disponíveis: ");
-                    for (int j = 0; j < produtos.Count; i++)
+                    for (int i = 0; i < produtos.Count; i++)
                     {
                         Console.WriteLine(produtos[i].Nome + ": R$ " + produtos[i].Preco);
                     }
-                    Console.WriteLine("Informe o nome produro desejado: ");
+                    Console.Write("Informe o nome produro desejado: ");
                     string nomeP = Console.ReadLine();
-                    for (int j = 0; j < produtos.Count; i++)
+                    if(produtos.Exists(x=> x.Nome == nomeP))
                     {
-                        if(produtos[j].Nome == nomeP)
-                        {
-                            reservas[i].Quarto.adicionaConsumo(produtos[j].Codigo);
-                            Console.WriteLine("Produto registrado!");
-                            break;
-                        }
+                        Produto p = produtos.Find(x => x.Nome == nomeP);
+                        r.Quarto.adicionaConsumo(p.Codigo);
+                        Console.WriteLine("Produto registrado!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("O produto com o nome informado não existe.");
                     }
                 }
             }
