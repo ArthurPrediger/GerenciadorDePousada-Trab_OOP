@@ -42,6 +42,7 @@ namespace GerenciadorDePousada_Trab_OOP
         {
             this.nome = nome;
             this.contato = contato;
+
         }
 
         //Método para carregar os dados dos arquivos
@@ -453,8 +454,10 @@ namespace GerenciadorDePousada_Trab_OOP
                     float vt = float.Parse(dias) * r.Quarto.Diaria + r.Quarto.valorTotalConsumo(this);
                     Console.WriteLine("Check-out realizado com sucesso.");
                     Console.WriteLine("Reserva:");
-                    Console.WriteLine("Data inicial: " + r.DiaInicio);
-                    Console.WriteLine("Data final: " + r.DiaFim);
+                    Console.WriteLine("Data inicial: " + r.DiaInicio.Dia.ToString() + "/" +
+                                     r.DiaInicio.Mes.ToString() + "/" + r.DiaInicio.Ano.ToString());
+                    Console.WriteLine("Data final: " + r.DiaFim.Dia.ToString() + "/" +
+                                     r.DiaFim.Mes.ToString() + "/" + r.DiaFim.Ano.ToString());
                     Console.WriteLine("Valor total das diárias: R$ " + (float.Parse(dias) * r.Quarto.Diaria));
                     Console.WriteLine("Valor total dos consumos: R$ " + r.Quarto.valorTotalConsumo(this));
                     r.Quarto.listaConsumo(this);
